@@ -10,6 +10,7 @@ class BmiCalculate extends StatefulWidget {
 class _BmiCalculateState extends State<BmiCalculate> {
   int currentIndex = 0;
   String result = "";
+  double currentslider = 0;
 
   TextEditingController heightController = TextEditingController();
   TextEditingController weightController = TextEditingController();
@@ -35,11 +36,11 @@ class _BmiCalculateState extends State<BmiCalculate> {
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              SizedBox(
+              const SizedBox(
                 height: 20,
               ),
-              const Text("Text your height in cm :"),
-              SizedBox(
+              const Text("Text your height in Meter :"),
+              const SizedBox(
                 height: 8.0,
               ),
               TextField(
@@ -47,22 +48,22 @@ class _BmiCalculateState extends State<BmiCalculate> {
                 textAlign: TextAlign.center,
                 controller: heightController,
                 decoration: InputDecoration(
-                  hintText: 'your height in cm',
+                  hintText: 'your height in meter',
                   filled: true,
-                  fillColor: Theme.of(context).backgroundColor,
+                  fillColor: Theme.of(context).colorScheme.background,
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(8.0),
                     borderSide: BorderSide.none,
                   ),
                 ),
                 style: TextStyle(
-                    color: Theme.of(context).textTheme.bodyText1?.color),
+                    color: Theme.of(context).textTheme.bodyLarge?.color),
               ),
-              SizedBox(
+              const SizedBox(
                 height: 20,
               ),
               const Text("Text your weight in KG :"),
-              SizedBox(
+              const SizedBox(
                 height: 8.0,
               ),
               TextField(
@@ -72,14 +73,34 @@ class _BmiCalculateState extends State<BmiCalculate> {
                 decoration: InputDecoration(
                   hintText: 'your weight in KG',
                   filled: true,
-                  fillColor: Theme.of(context).backgroundColor,
+                  fillColor: Theme.of(context).colorScheme.background,
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(8.0),
                     borderSide: BorderSide.none,
                   ),
                 ),
                 style: TextStyle(
-                    color: Theme.of(context).textTheme.bodyText1?.color),
+                    color: Theme.of(context).textTheme.bodyLarge?.color),
+              ),
+              SizedBox(height: 20,),
+              SizedBox(
+                width: double.infinity,
+                child: Text("AGE : ${currentslider.round()}", textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: 20,
+                ),),
+              ),
+              Slider(
+                activeColor: Colors.amber,
+                inactiveColor: Colors.grey,
+                value: currentslider,
+                max: 100,
+                label: currentslider.round().toString(),
+                onChanged: (double value) {
+                  setState(() {
+                    currentslider = value;
+                  });
+                },
               ),
               const SizedBox(
                 height: 20,
@@ -93,7 +114,7 @@ class _BmiCalculateState extends State<BmiCalculate> {
               const SizedBox(
                 height: 40,
               ),
-              Container(
+              SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
                   onPressed: () {
@@ -111,7 +132,7 @@ class _BmiCalculateState extends State<BmiCalculate> {
               const SizedBox(
                 height: 10,
               ),
-              Container(
+              SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
                   onPressed: () {
@@ -122,7 +143,7 @@ class _BmiCalculateState extends State<BmiCalculate> {
                     backgroundColor: Colors.red,
                   ),
                   child: const Wrap(
-                    crossAxisAlignment: WrapCrossAlignment.center,
+                    crossAxisAlignment: WrapCrossAlignment.start,
                     children: [Icon(Icons.refresh_sharp), Text("Reset")],
                   ),
                 ),
@@ -130,18 +151,18 @@ class _BmiCalculateState extends State<BmiCalculate> {
               const SizedBox(
                 height: 20,
               ),
-              Container(
+              const SizedBox(
                 width: double.infinity,
-                child: const Text(
+                child: Text(
                   "Your BMI is :",
                   textAlign: TextAlign.center,
                   style: TextStyle(fontSize: 24.0, fontWeight: FontWeight.bold),
                 ),
               ),
-              SizedBox(
+              const SizedBox(
                 height: 20,
               ),
-              Container(
+              SizedBox(
                 width: double.infinity,
                 child: Text(
                   " $result",
@@ -165,8 +186,6 @@ class _BmiCalculateState extends State<BmiCalculate> {
   }
 
   void BmiCalculate(double height, double weight, int index) {
-    double heightInMeter = height / 100.roundToDouble();
-
     if (height <= 0) {
       setState(() {
         result = "Invalid height";
@@ -179,14 +198,19 @@ class _BmiCalculateState extends State<BmiCalculate> {
     if (index == 0) {
       result1 = weight / ((height / 100) * (height / 100) / 0.0001);
     } else if (index == 1) {
-      result1 = (weight + 0.5) / ((height / 100) * (height / 100)/ 0.0001);
+      result1 = (weight + 0.009) / ((height / 100) * (height / 100) / 0.0001);
     } else {
       setState(() {
         result = "Select gender";
       });
       return;
     }
+
+    // if(index == 0){
+    //   result1 = (10 * weight) + (6.25 * height/)- (5*currentslider) + 5;
+    // }
     String bmi = result1.toStringAsFixed(2);
+
 
     setState(() {
       if (result1 < 18.5) {
